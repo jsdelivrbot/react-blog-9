@@ -8,6 +8,7 @@ import reducers from './reducers';
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
+
 ReactDOM.render(
   // Passing off control of rendering our application to Router...
   // Router is the object that decides which React components to render whenever the URL changes

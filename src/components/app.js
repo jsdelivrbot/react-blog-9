@@ -3,7 +3,10 @@ import React, { Component } from 'react';
 export default class App extends Component {
   render() {
     return (
-      <div>React simple starter</div>
+      // This is where we specify where we want the child components to render.
+      <div>
+        {this.props.children}
+      </div>
     );
   }
 }
