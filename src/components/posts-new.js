@@ -1,9 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form'; // reduxForm object is almost identical to the connect() function from react-redux
 import { createPost } from '../actions/index';
 import { Link } from 'react-router';
 
 class PostsNew extends Component {
+  // To navigate in our app without the <Link> component we need access to react router which is available to all our components via the context property
+  // Try to avoid using context in general, the only time you'll want to use it is when working with the router...
+  // https://www.udemy.com/react-redux/learn/v4/t/lecture/4419896
+  static contextTypes = {
+    router: PropTypes.object // I want access to a this.context.router property · please check all of the parents until you find it · this will give us an instance of the router
+  };
+
+  onSubmit(props) { // props === form props (not the component props)
+    this.props.createPost(props) // returns a promise · when the promise is resolved then we know that a post has been created · so this is a perfect place to hook onto and trigger a redirect
+      .then(() => {
+        // Blog post has been created, navigate user to the index
+        this.context.router.push('/');
+      });
+  }
+
   render() {
     const { fields: { title, categories, content }, handleSubmit } = this.props;
     // ES6 short for const handleSubmit = this.props.handleSubmit
@@ -16,7 +31,7 @@ class PostsNew extends Component {
       // {...title} · binding a specific form field to the relevant redx-form configuration object
       // {...title} · 'de-structuring' the title object · every single property (key + value) of title object will be visible on the <input>
       // Javascript (ES6) tricks: template string (backticks), ternary expression (is_it_true ? a : b)
-      <form onSubmit={handleSubmit(this.props.createPost)}>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
         <h3>Create A New Post</h3>
         <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
           <label>Title</label>
