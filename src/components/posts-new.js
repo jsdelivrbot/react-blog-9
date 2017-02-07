@@ -20,22 +20,54 @@ class PostsNew extends Component {
         <div className="form-group">
           <label>Title</label>
           <input type="text" className="form-control" {...title} />
+          <div className="text-help">
+            { title.touched ? title.error : '' }
+          </div>
         </div>
 
         <div className="form-group">
           <label>Categories</label>
           <input type="text" className="form-control" {...categories} />
+          <div className="text-help">
+            { categories.touched ? categories.error : '' }
+          </div>
         </div>
 
         <div className="form-group">
           <label>Content</label>
           <textarea type="text" className="form-control" {...content} />
+          <div className="text-help">
+            { content.touched ? content.error : '' }
+          </div>
         </div>
 
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     );
   }
+}
+
+
+// If we change the form in any way this validate function will run again
+// ...hence the error message disappearing automatically (if that validation is passing of course)
+function validate(values) {
+  const errors = {};
+
+
+  if (!values.title) {
+    errors.title = 'Enter a title.';
+  }
+  if (!values.categories) {
+    errors.categories = 'Enter at least one category.';
+  }
+  if (!values.content) {
+    errors.content = 'Please enter some content.';
+  }
+
+  // If the errors object has a key matching any of our field names (['title', 'categories', 'content'])...
+  // ...and it's value is a truthy object --> redux-form assumes that the form is not valid
+  // ...and is not allowing the form to be submitted + adds a couple of fields to the configuration object(s)
+  return errors;
 }
 
 
@@ -49,7 +81,8 @@ class PostsNew extends Component {
 // One of those helpers is handleSubmit()
 export default reduxForm({
   form: 'PostsNewForm', // The name of the form doesn't need to match the name of the component
-  fields: ['title', 'categories', 'content']
+  fields: ['title', 'categories', 'content'],
+  validate
 }, null, { createPost })(PostsNew); // { createPost } === { createPost: createPost } === shorthand for mapDispatchToProps()...
 // Whenever the user changes the values of any of these inputs, redux form sets those values in our global application state
 // state === {
