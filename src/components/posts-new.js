@@ -14,10 +14,10 @@ class PostsNew extends Component {
       // Optionally we can pass an action creator to handleSubmit(someActionCreator) which will be called (with the properties from the form) when the form gets submitted (and is valid)
       // {...title} · binding a specific form field to the relevant redx-form configuration object
       // {...title} · 'de-structuring' the title object · every single property (key + value) of title object will be visible on the <input>
-      // Note: can also pass in an optional
+      // Javascript (ES6) tricks: template string (backticks), ternary expression (is_it_true ? a : b)
       <form onSubmit={handleSubmit(this.props.createPost)}>
         <h3>Create A New Post</h3>
-        <div className="form-group">
+        <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
           <label>Title</label>
           <input type="text" className="form-control" {...title} />
           <div className="text-help">
@@ -25,7 +25,7 @@ class PostsNew extends Component {
           </div>
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${categories.touched && categories.invalid ? 'has-danger' : ''}`}>
           <label>Categories</label>
           <input type="text" className="form-control" {...categories} />
           <div className="text-help">
@@ -33,7 +33,7 @@ class PostsNew extends Component {
           </div>
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${content.touched && content.invalid ? 'has-danger' : ''}`}>
           <label>Content</label>
           <textarea type="text" className="form-control" {...content} />
           <div className="text-help">
