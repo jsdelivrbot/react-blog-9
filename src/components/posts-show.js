@@ -1,16 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchPost, deletePost } from '../actions/index';
 import { Link } from 'react-router';
 
 
 class PostsShow extends Component {
+  static contextTypes = {
+    router: PropTypes.object // We make the router available (by finding it in the parent components...)
+  }
+
   componentWillMount() {
     this.props.fetchPost(this.props.params.id);
   }
 
   onDeleteClick() {
-    this.props.deletePost(this.props.params.id);
+    this.props.deletePost(this.props.params.id) // this comes back with a resolved promise (axios.delete()) so we can chain onto it with .then
+      .then(() => { this.context.router.push('/'); }); // ...so we can use router here (this is how we redirect without <Link>)
   }
 
   render() {
